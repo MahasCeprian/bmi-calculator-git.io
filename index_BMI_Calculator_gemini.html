@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI Calculator</title>
+    <style>
+        /* Add your styling here, if desired */
+    </style>
+</head>
+<body>
+    <h1>BMI Calculator</h1>
+    <div class="container">
+        <label for="gender">Jenis Kelamin:</label>
+        <input type="radio" id="male" name="gender" value="male" checked>
+        <label for="male">Laki-laki</label>
+        <br>
+        <input type="radio" id="female" name="gender" value="female">
+        <label for="female">Wanita</label>
+        <br>
+        <label for="weight">Berat Badan (kg):</label>
+        <input type="number" id="weight" name="weight" placeholder="Enter your weight">
+        <br>
+        <label for="height">Tinggi Badan (cm):</label>
+        <input type="number" id="height" name="height" placeholder="Enter your height">
+        <br>
+        <label for="age">Usia (tahun):</label>
+        <input type="number" id="age" name="age" placeholder="Enter your age">
+        <br>
+        <button onclick="calculateBMI()">Hitung BMI</button>
+        <button onclick="resetForm()">Reset</button>
+        <div id="result"></div>
+        <div id="suggestions" style="width: 100%;"></div>
+    </div>
+    <script>
+        function calculateBMI() {
+            // Get gender
+            const gender = document.querySelector('input[name="gender"]:checked').value;
+
+            // Get weight, height, and age
+            const weight = parseFloat(document.getElementById('weight').value);
+            const height = parseFloat(document.getElementById('height').value);
+            const age = parseFloat(document.getElementById('age').value);
+
+            // Input validation (optional)
+            if (isNaN(weight) || isNaN(height) || isNaN(age) || weight <= 0 || height <= 0 || age <= 0) {
+                alert("Please enter valid values for weight, height, and age.");
+                return;
+            }
+
+            // Calculate BMI
+            const heightInMeters = height / 100;
+            const bmi = weight / (heightInMeters * heightInMeters);
+
+            // Interpret BMI result
+            let interpretation;
+            if (gender === 'male') {
+                if (bmi < 18.5) {
+                    interpretation = "Berat badan kurang ideal";
+                    showSuggestions('underweight');
+                } else if (bmi >= 18.5 && bmi <= 24.9) {
+                    interpretation = "Berat badan ideal";
+                } else if (bmi >= 25 && bmi <= 29.9) {
+                    interpretation = "Berat badan sedikit berlebihan";
+                    showSuggestions('overweight');
+                } else {
+                    interpretation = "Obesitas";
+                    showSuggestions('obese');
+                }
+            } else if (gender === 'female') {
+                if (bmi < 17.5) {
+                    interpretation = "Berat badan kurang ideal";
+                    showSuggestions('underweight');
+                } else if (bmi >= 17.5 && bmi <= 24.9) {
+                    interpretation = "Berat badan ideal";
+                } else if (bmi >= 25 && bmi <= 29.9) {
+                    interpretation = "Berat badan sedikit berlebihan";
+                    showSuggestions('overweight');
+                } else {
+                    interpretation = "Obesitas";
+                    showSuggestions('obese');
+                }
+            }
+
+            // Display result with interpretation
+            const resultElement = document.getElementById('result');
+            resultElement.innerHTML = `
+                BMI Anda: ${bmi.toFixed(2)} <br>
+                ${interpretation}
+            `;
+        }
+    function showSuggestions(category) {
+    const suggestionsElement = document.getElementById('suggestions');
+    suggestionsElement.innerHTML = '';
+
+    if (category === 'underweight') {
+        suggestionsElement.innerHTML += '<p>Anda kekurangan berat badan. Konsultasikan dengan dokter atau ahli gizi untuk mendapatkan saran yang tepat.</p>';
+        suggestionsElement.innerHTML += '<p>Makanan yang perlu ditingkatkan:</p><ul><li>Makanan kaya protein</li><li>Makanan kaya lemak sehat</li><li>Karbohidrat kompleks</li></ul>';
+    } else if (category === 'overweight' || category === 'obese') {
+        suggestionsElement.innerHTML += '<p>Anda kelebihan berat badan. Konsultasikan dengan dokter atau ahli gizi untuk mendapatkan saran yang tepat.</p>';
+        suggestionsElement.innerHTML += '<p>Makanan yang perlu dikurangi:</p><ul><li>Makanan tinggi gula</li><li>Makanan tinggi lemak jenuh</li><li>Makanan cepat saji</li><li>Minuman manis</li></ul>';
+        suggestionsElement.innerHTML += '<p>Makanan yang perlu ditingkatkan:</p><ul><li>Buah dan sayuran</li><li>Protein tanpa lemak</li><li>Gandum utuh</li><li>Air putih</li></ul>';
+    }
+}
+
+    function resetForm() {
+        // Clear input fields
+        document.getElementById('weight').value = "";
+        document.getElementById('height').value = "";
+        document.getElementById('age').value = "";
+
+        // Clear gender selection
+        document.getElementById('male').checked = true;
+        document.getElementById('female').checked = false;
+
+        // Clear result
+        document.getElementById('result').innerHTML = "";
+        document.getElementById('suggestions').innerHTML = "";
+    }
+    </script>
+</body>
+</html>
